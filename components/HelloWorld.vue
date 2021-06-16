@@ -1,7 +1,10 @@
 <template>
   <!-- vuetify의 그리드 시스템을 활용한 구조 -->
   <v-container>
-    <v-layout class="pa-5" row wrap>to do list</v-layout>
+    <v-flex xs12 text-xs-center>
+      <h1>to do list</h1>
+      <p>전체 할일 : {{ todoList.length }} / 완료된 할일 : {{ countDone }} / 남은 할일 : {{ todoList.length - countDone }}</p>
+    </v-flex>
     <v-layout class="pt-5" row wrap>
       <!-- 화면의 절반을 v-flex가 차지하게 된다 -->
       <!-- v-flex는 class를 넣지 않아도 된다 -->
@@ -13,8 +16,8 @@
       <v-flex xs6 pa-2>
         <!-- $emit을 통해 시그널을 받고 그 data를 받은 것을 내부의 있는 빈 Array 값에 넣어주는 작업을 해야 한다 -->
         <!-- @listAdd라는 신호가 오면 "listAdd라는 함수를 실행시켜줘" -->
-        <ListAdd @listAdd="listAdd"/>
-        <!-- @listAdd라는 함수가 실행되었을 때 listAdd(memo)에서 memo를 인자로 받는다 그 후 todoList: []에 추가 잘 될 것이다-->
+        <!-- @listAdd라는 함수가 실행되었을 때 listAdd(memo)에서 memo를 인자로 받는다 그 후 todoList: []에 추가 잘 될 것이다 -->
+        <ListAdd @listAdd="listAdd" @listEdit="listEdit"/>
       </v-flex>
     </v-layout>
   </v-container>
@@ -36,6 +39,15 @@ export default {
       todoList: []
     }
   },
+  computed:{
+    countDone(){
+      let count = 0
+      this.todoList.forEach(list => {
+        if(list.status === 'done') count++
+      })
+      return count
+    }
+  },
   methods: {
     listAdd(memo){
       console.log("받았어!")
@@ -53,6 +65,9 @@ export default {
       // array에서 어떤 요소를 제거하는 명령어 splice
       // todoList에서 몇 번째에 요소를 찾은 다음에 그 요소부터 시작해서 한 개를 지워줘 라는 의미
       this.todoList.splice(index, 1)
+    },
+    listEdit(memo, index){
+      this.todoList[index].memo = memo
     }
   }
 }
@@ -61,8 +76,5 @@ export default {
 .pa-5{
   font-size: 2em;
   color: gray;
-}
-v-container{
-  width: 300px;
 }
 </style>

@@ -10,26 +10,47 @@
         ></v-textarea>
 
         <!-- 부모컴포넌트로 $emit을 보낼 수 있는 추가버튼 -->
-        <v-btn @click="listAdd">추가</v-btn>
+        <v-btn v-if="mode==='add'" class="ma-3" @click="listAdd">추가</v-btn>
+        <v-btn v-if="mode==='edit'" class="ma-3" @click="listEdit">수정</v-btn>
     </div>
 </template>
 <script>
+import {eventBus} from "../main"
+
 export default {
     data(){
         return{
             // v-model로 binding 시킨 memo
-            memo: null
+            memo: null,
+            index: null,
+            mode: "add"
             // memo를 인자로 받아서 $emit을 통해서 부모컴포넌트로 신호를 보내도록 하겠다
         }
     },
+    created(){
+        eventBus.$on('listEdit', (memo, index) => {
+            this.memo = memo
+            this.index = index
+            this.mode = "edit"
+        })
+    },
     methods: {
         listAdd(){
-            console.log('리스트 추가')
             // 빈 내용을 추가했을 경우
             if(this.memo === null){
                 alert("내용을 입력해주세요.")
             }else{
                 this.$emit("listAdd", this.memo)
+                this.memo = null
+            }
+        },
+        listEdit(){
+            if(this.memo === null){
+                alert("내용을 입력해주세요.")
+            }else {
+                this.$emit("listEdit", this.memo, this.index)
+                this.memo = null
+                this.mode = "add"
             }
         }
     }
