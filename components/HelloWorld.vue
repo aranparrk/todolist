@@ -1,13 +1,15 @@
 <template>
   <!-- vuetify의 그리드 시스템을 활용한 구조 -->
   <v-container>
-    {{todoList}}
     <v-layout row wrap>
       <!-- 화면의 절반을 v-flex가 차지하게 된다 -->
-      <v-flex xs6>
-        <List/>
+      <!-- v-flex는 class를 넣지 않아도 된다 -->
+      <v-flex xs6 pa-2>
+        <!-- todoList: []내용을 전달해줘야 한다 -->
+        <!-- props -->
+        <List :todoList="todoList"/>
       </v-flex>
-      <v-flex xs6>
+      <v-flex xs6 pa-2>
         <!-- $emit을 통해 시그널을 받고 그 data를 받은 것을 내부의 있는 빈 Array 값에 넣어주는 작업을 해야 한다 -->
         <!-- @listAdd라는 신호가 오면 "listAdd라는 함수를 실행시켜줘" -->
         <ListAdd @listAdd="listAdd"/>
