@@ -1,13 +1,14 @@
 <template>
   <!-- vuetify의 그리드 시스템을 활용한 구조 -->
   <v-container>
-    <v-layout row wrap>
+    <v-layout class="pa-5" row wrap>to do list</v-layout>
+    <v-layout class="pt-5" row wrap>
       <!-- 화면의 절반을 v-flex가 차지하게 된다 -->
       <!-- v-flex는 class를 넣지 않아도 된다 -->
       <v-flex xs6 pa-2>
         <!-- todoList: []내용을 전달해줘야 한다 -->
         <!-- props -->
-        <List :todoList="todoList"/>
+        <List :todoList="todoList" @statusControl="statusControl" @listDelete="listDelete"/>
       </v-flex>
       <v-flex xs6 pa-2>
         <!-- $emit을 통해 시그널을 받고 그 data를 받은 것을 내부의 있는 빈 Array 값에 넣어주는 작업을 해야 한다 -->
@@ -43,7 +44,25 @@ export default {
       // {속성: 값}
       // listAdd는 list가 생성이 될때만 작성되기 때문에 created라는 status를 하나 넣어준다
       this.todoList.push({memo: memo, status: "created"})
+    },
+    statusControl(index, status){
+      // todolist에서 몇 번째 인자인지를 찾아서 
+      this.todoList[index].status = status
+    },
+    listDelete(index){
+      // array에서 어떤 요소를 제거하는 명령어 splice
+      // todoList에서 몇 번째에 요소를 찾은 다음에 그 요소부터 시작해서 한 개를 지워줘 라는 의미
+      this.todoList.splice(index, 1)
     }
   }
 }
 </script>
+<style>
+.pa-5{
+  font-size: 2em;
+  color: gray;
+}
+v-container{
+  width: 300px;
+}
+</style>
